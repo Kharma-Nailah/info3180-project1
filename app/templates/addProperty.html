@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block main %}
+<h2>Add New Property</h2>
+<div class="addProperty-form"><!--start of div for add a property page-->
+
+{% include 'flash_messages.html' %}
+<form action="{{ url_for('createProp') }}" method="post" enctype="multipart/form-data">
+{{ form.csrf_token }}
+
+<!--top layer fields-->
+<div class="formTopFields">
+    <div class="top">
+        {{form.title.label}}
+        <br>
+        {{form.title}}
+    </div>
+    <div class="top">
+        {{form.description.label}}
+        <br>
+        {{form.description}}
+    </div>  
+</div>
+
+<!--Mid layer fields-->
+<div class="formMidFields">
+    <div class="Mid">
+      {{ form.bedroom.label}}
+      <br>
+      {{ form.bedroom}}
+    </div>
+    <div class="Mid">
+      {{ form.bathroom.label}}
+      <br>
+      {{ form.bathroom}} 
+    </div>
+    <div class="Mid">
+      {{ form.price.label}}
+      <br>
+      {{ form.price}}
+    </div>
+    <div class="Mid">
+      {{ form.propertyType.label}}
+      <br>
+      {{ form.propertyType}}
+    </div>
+    <div class="Mid">
+      {{ form.location.label}}
+      <br>
+      {{ form.location}}
+    </div>
+</div>
+
+<!--photo Layer-->
+<div class="formPhotoField">
+    {{ form.photo.label}}
+    <br>
+    <input type="file" name="photo">
+   
+</div>
+
+<br>
+
+<!--button Layer-->
+<div class="Btn">
+    <button type="submit" name="submit" class="btn btn-primary btn-block">Add Property</button>
+   
+</div>
+
+</form>
+</div> <!--end of div for add a property page-->
+{% endblock %}

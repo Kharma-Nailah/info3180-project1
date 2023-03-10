@@ -1,0 +1,44 @@
+h2{
+    font-weight: bold;
+}
+ul{
+    list-style: none;
+}
+
+.formTopFields input
+{
+    width:500px;
+}
+
+.formMidFields
+{
+    display: grid;
+    grid-template-columns: auto auto;
+    row-gap: 15px;
+  
+}
+.addProperty-form{
+    background-color: white;
+    padding:25px;
+    width:650px;
+    font-weight: bold;
+    
+}
+
+
+label
+{
+    font-weight: 10px;
+    color: black;
+}
+
+img{
+    
+    width: 285px;
+    height: 175px;
+}
+
+/* for text field borders:
+border-radius: 5px;
+border-style: outset;
+    */

@@ -4,9 +4,13 @@ Jinja2 Documentation:    https://jinja.palletsprojects.com/
 Werkzeug Documentation:  https://werkzeug.palletsprojects.com/
 This file contains the routes for your application.
 """
-
+import os
 from app import app
 from flask import render_template, request, redirect, url_for
+from .forms import addProperty
+from werkzeug.utils import secure_filename
+#from app.models import Properties
+import psycopg2
 
 
 ###
@@ -28,6 +32,27 @@ def about():
 ###
 # The functions below should be applicable to all Flask apps.
 ###
+
+#1. route for "/properties/create"
+@app.route('/properties/create', methods=['POST','GET'])
+def createProp():
+    form = addProperty()
+    """form to add a new property."""
+    return render_template('addProperty.html',form=form)
+
+#2. route for "/properties"
+@app.route('/properties')
+def properties():
+    """form to add a new property."""
+    return render_template('properties.html')
+
+#3. route for "/properties/<propertyid>"
+@app.route('/properties/<propertyid>')
+def propid():
+    """form to add a new property."""
+    return render_template('propertyid.html')
+
+
 
 # Display Flask WTF errors as Flash messages
 def flash_errors(form):
