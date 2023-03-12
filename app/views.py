@@ -5,11 +5,12 @@ Werkzeug Documentation:  https://werkzeug.palletsprojects.com/
 This file contains the routes for your application.
 """
 import os
-from app import app
-from flask import render_template, request, redirect, url_for
+from app import app, db
+
+from flask import render_template, request, redirect, url_for, flash, session, abort, send_from_directory
 from .forms import addProperty
 from werkzeug.utils import secure_filename
-#from app.models import Properties
+from app.models import Properties
 import psycopg2
 
 
@@ -36,22 +37,94 @@ def about():
 #1. route for "/properties/create"
 @app.route('/properties/create', methods=['POST','GET'])
 def createProp():
-    form = addProperty()
     """form to add a new property."""
+    form = addProperty()
+    
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            img=form.photo.data
+            print('photo filename', img)
+            filename=secure_filename(img.filename)
+            print ("file name is :"+ filename)
+            img.save(os.path.join(app.config['UPLOAD_FOLDER'],filename))
+
+
+            form_data=Properties(form.title.data,form.bedroom.data,form.bathroom.data,form.location.data,form.price.data,form.propertyType.data,form.description.data,filename)
+
+            """
+            form_data.title=form.title.data
+            form_data.description=form.description.data
+            form_data.bedroom=form.bedroom.data
+            form_data.bathroom=form.bathroom.data
+            form_data.price=form.price.data
+            form_data.location=form.location.data
+            form_data.propertyType=form.propertyType.data
+            form_data.photo_name=filename """
+
+            db.session.add(form_data)
+            db.session.commit()
+
+            flash ('Your property was sucessfully added!')
+            return redirect(url_for('properties'))
+
     return render_template('addProperty.html',form=form)
 
+
+#get  images from upload folder
+@app.route('/properties/<filename>')
+def get_image(filename):
+    root_dir=os.getcwd()
+    return send_from_directory(os.path.join(root_dir,app.config['UPLOAD_FOLDER']), filename)
+
+
+def get_uploaded_images():
+    rootdir=os.getcwd()
+    upload_path= rootdir + '/uploads'
+    upload_lst=[]
+    for subdir, dirs, files in os.walk(upload_path):
+        for file in files:
+            if file.endswith(('.png', '.jpg', '.jpeg', '.PNG', '.JPG', '.JPEG')):
+                upload_lst.append(file)
+    return upload_lst
+
+#retrieve records with properties saved
+def get_property():
+    p_lst=Properties.query.all()
+    records=[{"id":p.id,
+        "title":p.title,
+        "location":p.location,
+        "price":p.price,
+        "rooms":p.rooms,
+        "baths":p.baths,
+        "propType":p.propType,
+        "description":p.description,"image":p.image} for p in p_lst]
+    return records
+
+
+
+"""
+def formatCurrency(amt: String):
+    return "${:,.2f}".format(float(amt))"""
+
 #2. route for "/properties"
-@app.route('/properties')
+@app.route('/properties/')
 def properties():
-    """form to add a new property."""
-    return render_template('properties.html')
+    prop=get_property()
+    return render_template('properties.html', file_list=prop)
+
 
 #3. route for "/properties/<propertyid>"
-@app.route('/properties/<propertyid>')
-def propid():
-    """form to add a new property."""
-    return render_template('propertyid.html')
-
+#function to view individual properties
+@app.route('/properties/<propertyid>/')
+def view_property(propertyid):
+    records=get_property()
+    for r in records:
+        print(r['id'],propertyid)
+        if str(r['id'])==str(propertyid):
+            print("pass")
+            this_property=r
+            print(this_property)
+    return render_template('viewProp.html', prop=this_property )
 
 
 # Display Flask WTF errors as Flash messages
