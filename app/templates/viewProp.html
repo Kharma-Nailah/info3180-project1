@@ -7,7 +7,7 @@
 
 <ul>
     <div id="item-details">
-        <div><li><img id="img-view" src="{{url_for('get_image', filename=prop['photo'])}}"></li></div>
+        <div><li><img id="img-view" src="{{url_for('get_image', filename=prop['image'])}}"></li></div>
         <div id="info">
         <li><h1>{{prop['title']}}</h1></li>
 
@@ -23,7 +23,7 @@
         <i class="fa fa-bath"></i>
         <li>{{prop['baths']}} Bathrooms</li>
         </div>
-        
+
         <div class="horizontal">
         <i class="fa fa-map-marker"></i>
         <li>{{prop['location']}}</li>

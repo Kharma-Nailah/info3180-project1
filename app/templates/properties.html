@@ -10,7 +10,7 @@
     {% for prop in file_list %}
         <div class="property-details">
             <div id="img">
-            <li><img src="{{url_for('get_image', filename=prop['photo'])}}"/></li>
+            <li><img src="{{url_for('get_image', filename=prop['image'])}}"/></li>
             </div>
             <div id="detail">
             <li class="title-p">{{prop['title']}}</li>
